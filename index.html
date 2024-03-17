@@ -3,17 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Function Animation</title>
+  <title>Neon Function Animation</title>
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black; /* Ubah latar belakang menjadi hitam */
+    }
+
     canvas {
-      border: 1px solid black;
-      margin: 0 auto; /* center the canvas */
-      display: block; /* remove default whitespace */
+      display: block;
+      margin: 0 auto;
+      border: none;
+      background-color: transparent;
+    }
+
+    @keyframes neon {
+      from {
+        text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000, 0 0 50px #ff0000, 0 0 60px #ff0000, 0 0 70px #ff0000;
+      }
+      to {
+        text-shadow: 0 0 10px #0000ff, 0 0 20px #0000ff, 0 0 30px #0000ff, 0 0 40px #0000ff, 0 0 50px #0000ff, 0 0 60px #0000ff, 0 0 70px #0000ff;
+      }
+    }
+
+    canvas.neon {
+      animation: neon 1s infinite alternate;
     }
   </style>
 </head>
 <body>
-  <canvas id="myCanvas" width="800" height="600"></canvas>
+  <canvas id="myCanvas" class="neon" width="800" height="600"></canvas>
   <script>
     const canvas = document.getElementById('myCanvas');
     const ctx = canvas.getContext('2d');
@@ -33,7 +53,13 @@
         ctx.lineTo(x, y);
       }
 
-      ctx.strokeStyle = 'red';
+      // Gradient
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, 'red');
+      gradient.addColorStop(1, 'blue');
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = 2; // Ubah lebar garis sesuai kebutuhan
+
       ctx.stroke();
 
       requestAnimationFrame(draw);
