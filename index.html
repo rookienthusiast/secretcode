@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Feeling to You</title>
+  <title>My Feeling To You</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: black; /* Ubah latar belakang menjadi hitam */
+      background-color: black;
     }
 
     canvas {
@@ -20,10 +20,10 @@
 
     @keyframes neon {
       from {
-        text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000, 0 0 50px #ff0000, 0 0 60px #ff0000, 0 0 70px #ff0000;
+        text-shadow: 0 0 10px #ff1493, 0 0 20px #ff1493, 0 0 30px #ff1493, 0 0 40px #ff1493, 0 0 50px #ff1493, 0 0 60px #ff1493, 0 0 70px #ff1493;
       }
       to {
-        text-shadow: 0 0 10px #0000ff, 0 0 20px #0000ff, 0 0 30px #0000ff, 0 0 40px #0000ff, 0 0 50px #0000ff, 0 0 60px #0000ff, 0 0 70px #0000ff;
+        text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff, 0 0 40px #00ffff, 0 0 50px #00ffff, 0 0 60px #00ffff, 0 0 70px #00ffff;
       }
     }
 
@@ -37,8 +37,8 @@
   <script>
     const canvas = document.getElementById('myCanvas');
     const ctx = canvas.getContext('2d');
-
-    const speed = 0.01;
+    let isPressed = false;
+    let scaleWave = 1;
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -47,7 +47,7 @@
 
       for (let x = 0; x <= canvas.width; x++) {
         const xValue = (x - canvas.width / 2) / 50; // Scale x to fit canvas and center it
-        const yValue = Math.pow(Math.abs(xValue), 2/3) + 0.9 * Math.sqrt(3.3 - Math.pow(xValue, 2)) * Math.sin(Math.PI * xValue * (Date.now() % 30000) / 1500);
+        const yValue = Math.pow(Math.abs(xValue), 2/3) + 0.9 * Math.sqrt(3.3 - Math.pow(xValue, 2)) * Math.sin(Math.PI * xValue * (Date.now() % 30000) / 1500 * scaleWave);
         const y = canvas.height / 2 - yValue * 50; // Scale y to fit canvas
 
         ctx.lineTo(x, y);
@@ -55,18 +55,32 @@
 
       // Gradient
       const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, 'red');
-      gradient.addColorStop(1, 'blue');
+      if (isPressed) {
+        gradient.addColorStop(1, 'pink');
+        gradient.addColorStop(1, 'cyan');
+        scaleWave *= 1.05; // Membesarkan gelombang
+      } else {
+        gradient.addColorStop(0, 'red');
+        gradient.addColorStop(1, 'blue');
+        scaleWave = 1; // Mengembalikan ukuran gelombang ke semula
+      }
       ctx.strokeStyle = gradient;
-      ctx.lineWidth = 2; // Ubah lebar garis sesuai kebutuhan
+      ctx.lineWidth = 2;
 
       ctx.stroke();
 
       requestAnimationFrame(draw);
     }
 
+    canvas.addEventListener('mousedown', function() {
+      isPressed = true;
+    });
+
+    canvas.addEventListener('mouseup', function() {
+      isPressed = false;
+    });
+
     draw();
   </script>
-  <footer style="text-align: center; color: white;">© by nara and arhamni</footer>
 </body>
 </html>
