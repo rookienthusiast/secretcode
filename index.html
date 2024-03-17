@@ -20,10 +20,10 @@
 
     @keyframes neon {
       from {
-        text-shadow: 0 0 10px #ff1493, 0 0 20px #ff1493, 0 0 30px #ff1493, 0 0 40px #ff1493, 0 0 50px #ff1493, 0 0 60px #ff1493, 0 0 70px #ff1493;
+        text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000, 0 0 50px #ff0000, 0 0 60px #ff0000, 0 0 70px #ff0000;
       }
       to {
-        text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff, 0 0 40px #00ffff, 0 0 50px #00ffff, 0 0 60px #00ffff, 0 0 70px #00ffff;
+        text-shadow: 0 0 10px #004cff, 0 0 20px #004cff, 0 0 30px #004cff, 0 0 40px #004cff, 0 0 50px #004cff, 0 0 60px #004cff, 0 0 70px #004cff;
       }
     }
 
@@ -38,7 +38,8 @@
     const canvas = document.getElementById('myCanvas');
     const ctx = canvas.getContext('2d');
     let isPressed = false;
-    let scaleWave = 1;
+    let scaleWave = 1.05;
+    let touchCount = 0;
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -53,19 +54,23 @@
         ctx.lineTo(x, y);
       }
 
-      // Gradient
+      // Gradiasi warna
       const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       if (isPressed) {
         gradient.addColorStop(1, 'pink');
         gradient.addColorStop(1, 'cyan');
-        scaleWave *= 1.05; // Membesarkan gelombang
+        scaleWave *= 1.09; // Saat ditekan
+        ctx.shadowColor = 'maroon'; // Warna bayangan saat ditekan
+        ctx.shadowBlur = 200; // Blur bayangan saat ditekan
       } else {
         gradient.addColorStop(0, 'red');
         gradient.addColorStop(1, 'blue');
-        scaleWave = 1; // Mengembalikan ukuran gelombang ke semula
+        scaleWave = 1.3; // Ketika tidak ditekan
+        ctx.shadowColor = 'black'; // Warna bayangan
+        ctx.shadowBlur = 0; // Blur bayangan
       }
       ctx.strokeStyle = gradient;
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 1.5;
 
       ctx.stroke();
 
@@ -77,6 +82,29 @@
     });
 
     canvas.addEventListener('mouseup', function() {
+      isPressed = false;
+    });
+
+    canvas.addEventListener('touchstart', function(event) {
+      event.preventDefault(); // Mencegah perilaku default dari sentuhan
+      if (!isPressed) { // Cek apakah sedang ditekan sebelumnya untuk menghindari penambahan yang berlebihan
+        isPressed = true;
+        touchCount++;
+        if (touchCount >= 10) {
+          window.location.href = "https://music.youtube.com/watch?v=tpbcbj0bR5o";
+        }
+      }
+    });
+
+    canvas.addEventListener('touchend', function() {
+      isPressed = false;
+    });
+
+    document.addEventListener('mouseup', function() {
+      isPressed = false;
+    });
+
+    document.addEventListener('touchend', function() {
       isPressed = false;
     });
 
